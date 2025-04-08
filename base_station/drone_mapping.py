@@ -35,7 +35,7 @@ direction_opposites = {
 }
 
 
-# --- Fixing malformed JSON files ---
+# --- Fixing JSON files ---
 def fix_json_file(input_file, output_file):
     """
     This function is used to correct improperly structured JSON logs
@@ -71,65 +71,6 @@ def fix_json_file(input_file, output_file):
     except FileNotFoundError:
         print(f"The file {input_file} was not found!")
         return False
-
-
-# --- Preprocessing the flight log ---
-def process_flight_data(input_file_name):
-    """
-    Processes the drone flight data file for further analysis and mapping.
-    It recalculates timestamps to create consistent intervals, simulates
-    natural sensor noise by adding small random offsets, and saves the
-    transformed data into a duplicate file.
-    """
-    # Load original flight log
-    try:
-        with open(input_file_name, "r") as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        print(f"The file {input_file_name} was not found!")
-        return
-    except json.JSONDecodeError as e:
-        print(f"Error loading flight data: {e}")
-        return
-
-    reversed_data = data  # Preserve order for forward simulation
-
-    # Prepare data structure with recalculated time and noise injection
-    new_data = []
-    base_time = 0.0
-    last_time = reversed_data[0]["time"] - 1.5  # Reference start time
-
-    for entry in reversed_data:
-        new_entry = copy.deepcopy(entry)
-
-        # Time adjustment: make timestamps relative and continuous
-        time_diff = entry["time"] - last_time
-        new_entry["time"] = round(base_time, 2)
-        base_time += time_diff
-        last_time = entry["time"]
-
-        new_data.append(new_entry)
-
-        # Occasionally duplicate entries with randomized noise for realism
-        add_sample = random.uniform(2, 3)
-        if add_sample > 1:
-            new_entry1 = copy.deepcopy(entry)
-            new_entry1["time"] = round(base_time, 2)
-            base_time += time_diff
-
-            # Add random noise to distance measurements while avoiding negatives
-            for direction in new_entry1["distance"]:
-                random_offset1 = random.uniform(-10, 10)
-                new_entry1["distance"][direction] = round(
-                    max(0, new_entry1["distance"][direction] + random_offset1), 1
-                )
-            new_data.append(new_entry1)
-
-    # Save the processed result under a new filename
-    output_file_name = f"duplicate_{input_file_name}"
-    with open(output_file_name, "w") as file:
-        json.dump(new_data, file, indent=4)
-        print(f"Processed data saved to '{output_file_name}'")
 
 
 # --- Load structured flight data for analysis ---
