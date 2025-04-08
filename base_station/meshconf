@@ -1,0 +1,10 @@
+sudo service NetworkManager stop
+sudo ifconfig wlxa0f3c11b3d61 down
+sudo modprobe batman-adv
+sudo iwconfig wlxa0f3c11b3d61 mode ad-hoc essid batmesh
+sudo batctl if add wlxa0f3c11b3d61
+sudo ifconfig wlxa0f3c11b3d61 up
+sudo ifconfig bat0 192.168.2.1
+sudo ifconfig bat0 up
+sudo ifconfig wlxa0f3c11b3d61 up
+sudo batctl nc 1
