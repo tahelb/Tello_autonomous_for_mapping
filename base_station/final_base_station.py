@@ -12,7 +12,7 @@ import logging
 import datetime
 import subprocess
 import matplotlib.pyplot as plt
-from drone_mapping import fix_json_file, process_flight_data, load_flight_data
+from drone_mapping import fix_json_file, load_flight_data
 from drone_mapping import generate_map, generate_combine_map, generate_average_map, generate_revaluation_map
 
 # Configure logging system for runtime information
@@ -80,14 +80,11 @@ def process_and_generate_all_maps(original_filename, recall_filename):
        - Average path map
        - Revaluation-based path correction map
     """
-    fix_json_file(original_filename, "fixed_original.json")
-    fix_json_file(recall_filename, "fixed_recall.json")
+fix_json_file(original_filename, "fixed_original.json")
+fix_json_file(recall_filename, "fixed_recall.json")
 
-    process_flight_data("fixed_original.json")
-    process_flight_data("fixed_recall.json")
-
-    original_data = load_flight_data("duplicate_fixed_original.json")
-    recall_data = load_flight_data("duplicate_fixed_recall.json")
+original_data = load_flight_data("fixed_original.json")
+recall_data = load_flight_data("fixed_recall.json")
 
     if original_data and recall_data:
         generate_map(original_data, recall_data, "Forward Mapping", 1)
