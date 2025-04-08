@@ -29,7 +29,6 @@ FILE_PORT = 65436  # TCP port used for file transfer
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 FILE_NAME = f"flight_data_{timestamp}.json"  # Unique filename for storing session data
 
-ALERT_DISTANCE = 30  # Minimum safety threshold for obstacle detection in cm
 keyup_flag = True  # State variable used to detect key release in the control GUI
 
 # --- Global State Variables ---
